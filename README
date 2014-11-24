@@ -1,0 +1,22 @@
+Installation Steps:
+1) Install OpenBLAS:
+	sudo apt-get install build-essential gcc g++ gfortran git libgfortran3
+	cd /tmp
+	git clone https://github.com/xianyi/OpenBLAS.git
+	cd OpenBLAS
+	make NO_AFFINITY=1 USE_OPENMP=1
+	sudo make install
+	add the following line in ./bashrc: export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/mesa/libGL.so.1
+										export LD_LIBRARY_PATH=/opt/OpenBLAS/lib/:$LD_LIBRARY_PATH
+2) Install OverFeat:
+	Download the archive from http://cilvr.cs.nyu.edu/doku.php?id=software:overfeat:start
+	tar xvf overfeat-vXX.tgz
+	cd overfeat
+	./download_weights.py 
+	apt-get install g++ git python imagemagick cmake
+	apt-get install pkg-config libopencv-dev libopencv-highgui-dev
+	cd src
+	make all
+	make cam (to build the webcam demo)
+	Keep the repository updated by git pull
+3) Run rosmake followed by make to build the binaries

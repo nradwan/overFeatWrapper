@@ -1,0 +1,230 @@
+Performing C SOURCE FILE Test C_HAS_SSE3_1 failed with the following output:
+Change Dir: /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec976384596/fast"
+make[2]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/make -f CMakeFiles/cmTryCompileExec976384596.dir/build.make CMakeFiles/cmTryCompileExec976384596.dir/build
+make[3]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+/usr/bin/cmake: /usr/local/lib/libcurl.so.4: no version information available (required by /usr/bin/cmake)
+Building C object CMakeFiles/cmTryCompileExec976384596.dir/src.c.o
+/usr/bin/gcc   -fopenmp -DC_HAS_SSE3_1   -o CMakeFiles/cmTryCompileExec976384596.dir/src.c.o   -c /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c
+In file included from /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:2:0:
+/usr/lib/gcc/x86_64-linux-gnu/4.8/include/pmmintrin.h:31:3: error: #error "SSE3 instruction set not enabled"
+ # error "SSE3 instruction set not enabled"
+   ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c: In function ‘main’:
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:7:5: error: unknown type name ‘__m128i’
+     __m128i a;
+     ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:8:5: error: unknown type name ‘__m128i’
+     a = _mm_lddqu_si128( (const __m128i*)vals );
+     ^
+make[3]: *** [CMakeFiles/cmTryCompileExec976384596.dir/src.c.o] Error 1
+make[3]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+make[2]: *** [cmTryCompileExec976384596/fast] Error 2
+make[2]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+
+Return value: 1
+Source file was:
+
+  #include <pmmintrin.h>
+
+  int main( )
+  {
+    const int vals[4] = {0,0,0,0};
+    __m128i a;
+    a = _mm_lddqu_si128( (const __m128i*)vals );
+    return 0;
+  }
+Performing C SOURCE FILE Test C_HAS_SSE4_1_1 failed with the following output:
+Change Dir: /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2237578700/fast"
+make[2]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2237578700.dir/build.make CMakeFiles/cmTryCompileExec2237578700.dir/build
+make[3]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+/usr/bin/cmake: /usr/local/lib/libcurl.so.4: no version information available (required by /usr/bin/cmake)
+Building C object CMakeFiles/cmTryCompileExec2237578700.dir/src.c.o
+/usr/bin/gcc   -fopenmp -DC_HAS_SSE4_1_1   -o CMakeFiles/cmTryCompileExec2237578700.dir/src.c.o   -c /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c
+In file included from /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:2:0:
+/usr/lib/gcc/x86_64-linux-gnu/4.8/include/smmintrin.h:31:3: error: #error "SSE4.1 instruction set not enabled"
+ # error "SSE4.1 instruction set not enabled"
+   ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c: In function ‘main’:
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:6:5: error: unknown type name ‘__m128i’
+     __m128i a, b;
+     ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:7:5: error: unknown type name ‘__m128i’
+     __m128i res = _mm_max_epi8(a, b);
+     ^
+make[3]: *** [CMakeFiles/cmTryCompileExec2237578700.dir/src.c.o] Error 1
+make[3]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+make[2]: *** [cmTryCompileExec2237578700/fast] Error 2
+make[2]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+
+Return value: 1
+Source file was:
+
+  #include <smmintrin.h>
+
+  int main ()
+  {
+    __m128i a, b;
+    __m128i res = _mm_max_epi8(a, b);
+
+    return 0;
+  }
+
+Performing C SOURCE FILE Test C_HAS_SSE4_2_1 failed with the following output:
+Change Dir: /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2508666509/fast"
+make[2]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2508666509.dir/build.make CMakeFiles/cmTryCompileExec2508666509.dir/build
+make[3]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+/usr/bin/cmake: /usr/local/lib/libcurl.so.4: no version information available (required by /usr/bin/cmake)
+Building C object CMakeFiles/cmTryCompileExec2508666509.dir/src.c.o
+/usr/bin/gcc   -fopenmp -DC_HAS_SSE4_2_1   -o CMakeFiles/cmTryCompileExec2508666509.dir/src.c.o   -c /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c
+In file included from /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:2:0:
+/usr/lib/gcc/x86_64-linux-gnu/4.8/include/nmmintrin.h:31:3: error: #error "SSE4.2 instruction set not enabled"
+ # error "SSE4.2 instruction set not enabled"
+   ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c: In function ‘main’:
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:6:5: error: unknown type name ‘__m128i’
+     __m128i a, b, c;
+     ^
+make[3]: *** [CMakeFiles/cmTryCompileExec2508666509.dir/src.c.o] Error 1
+make[3]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+make[2]: *** [cmTryCompileExec2508666509/fast] Error 2
+make[2]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+
+Return value: 1
+Source file was:
+
+  #include <nmmintrin.h>
+
+  int main()
+  {
+    __m128i a, b, c;
+    c = _mm_cmpgt_epi64(a, b);
+    return 0;
+  }
+
+Performing C SOURCE FILE Test CXX_HAS_SSE3_1 failed with the following output:
+Change Dir: /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec236922139/fast"
+make[2]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/make -f CMakeFiles/cmTryCompileExec236922139.dir/build.make CMakeFiles/cmTryCompileExec236922139.dir/build
+make[3]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+/usr/bin/cmake: /usr/local/lib/libcurl.so.4: no version information available (required by /usr/bin/cmake)
+Building C object CMakeFiles/cmTryCompileExec236922139.dir/src.c.o
+/usr/bin/gcc   -fopenmp -DCXX_HAS_SSE3_1   -o CMakeFiles/cmTryCompileExec236922139.dir/src.c.o   -c /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c
+In file included from /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:2:0:
+/usr/lib/gcc/x86_64-linux-gnu/4.8/include/pmmintrin.h:31:3: error: #error "SSE3 instruction set not enabled"
+ # error "SSE3 instruction set not enabled"
+   ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c: In function ‘main’:
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:7:5: error: unknown type name ‘__m128i’
+     __m128i a;
+     ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:8:5: error: unknown type name ‘__m128i’
+     a = _mm_lddqu_si128( (const __m128i*)vals );
+     ^
+make[3]: *** [CMakeFiles/cmTryCompileExec236922139.dir/src.c.o] Error 1
+make[3]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+make[2]: *** [cmTryCompileExec236922139/fast] Error 2
+make[2]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+
+Return value: 1
+Source file was:
+
+  #include <pmmintrin.h>
+
+  int main( )
+  {
+    const int vals[4] = {0,0,0,0};
+    __m128i a;
+    a = _mm_lddqu_si128( (const __m128i*)vals );
+    return 0;
+  }
+Performing C SOURCE FILE Test CXX_HAS_SSE4_1_1 failed with the following output:
+Change Dir: /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec105958157/fast"
+make[2]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/make -f CMakeFiles/cmTryCompileExec105958157.dir/build.make CMakeFiles/cmTryCompileExec105958157.dir/build
+make[3]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+/usr/bin/cmake: /usr/local/lib/libcurl.so.4: no version information available (required by /usr/bin/cmake)
+Building C object CMakeFiles/cmTryCompileExec105958157.dir/src.c.o
+/usr/bin/gcc   -fopenmp -DCXX_HAS_SSE4_1_1   -o CMakeFiles/cmTryCompileExec105958157.dir/src.c.o   -c /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c
+In file included from /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:2:0:
+/usr/lib/gcc/x86_64-linux-gnu/4.8/include/smmintrin.h:31:3: error: #error "SSE4.1 instruction set not enabled"
+ # error "SSE4.1 instruction set not enabled"
+   ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c: In function ‘main’:
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:6:5: error: unknown type name ‘__m128i’
+     __m128i a, b;
+     ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:7:5: error: unknown type name ‘__m128i’
+     __m128i res = _mm_max_epi8(a, b);
+     ^
+make[3]: *** [CMakeFiles/cmTryCompileExec105958157.dir/src.c.o] Error 1
+make[3]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+make[2]: *** [cmTryCompileExec105958157/fast] Error 2
+make[2]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+
+Return value: 1
+Source file was:
+
+  #include <smmintrin.h>
+
+  int main ()
+  {
+    __m128i a, b;
+    __m128i res = _mm_max_epi8(a, b);
+
+    return 0;
+  }
+
+Performing C SOURCE FILE Test CXX_HAS_SSE4_2_1 failed with the following output:
+Change Dir: /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/make "cmTryCompileExec2420620187/fast"
+make[2]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2420620187.dir/build.make CMakeFiles/cmTryCompileExec2420620187.dir/build
+make[3]: Entering directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+/usr/bin/cmake: /usr/local/lib/libcurl.so.4: no version information available (required by /usr/bin/cmake)
+Building C object CMakeFiles/cmTryCompileExec2420620187.dir/src.c.o
+/usr/bin/gcc   -fopenmp -DCXX_HAS_SSE4_2_1   -o CMakeFiles/cmTryCompileExec2420620187.dir/src.c.o   -c /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c
+In file included from /home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:2:0:
+/usr/lib/gcc/x86_64-linux-gnu/4.8/include/nmmintrin.h:31:3: error: #error "SSE4.2 instruction set not enabled"
+ # error "SSE4.2 instruction set not enabled"
+   ^
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c: In function ‘main’:
+/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp/src.c:6:5: error: unknown type name ‘__m128i’
+     __m128i a, b, c;
+     ^
+make[3]: *** [CMakeFiles/cmTryCompileExec2420620187.dir/src.c.o] Error 1
+make[3]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+make[2]: *** [cmTryCompileExec2420620187/fast] Error 2
+make[2]: Leaving directory `/home/noha/Documents/Hiwi/overfeat/src/TH/build/CMakeFiles/CMakeTmp'
+
+Return value: 1
+Source file was:
+
+  #include <nmmintrin.h>
+
+  int main()
+  {
+    __m128i a, b, c;
+    c = _mm_cmpgt_epi64(a, b);
+    return 0;
+  }
+
