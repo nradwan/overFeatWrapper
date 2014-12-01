@@ -7,11 +7,17 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
 #include <assert.h>
-#include "sensor_msgs/PointCloud2.h"
+#include "sensor_msgs/Image.h"
 #include "overFeatWrapper/overFeat.h"
 #include "overFeatWrapper/detectedObjArray.h"
 #include "overFeatWrapper/detectedObj.h"
+#include <image_transport/image_transport.h>
+#include <cv_bridge/cv_bridge.h>
+#include <sensor_msgs/image_encodings.h>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 
+namespace enc = sensor_msgs::image_encodings;
 using namespace cv;
 
 class Wrapper{
@@ -19,9 +25,10 @@ class Wrapper{
 		ros::NodeHandle node_handle;
 		std::string kinect_topic;
 		std::string classification_topic;
+		std::string pub_topic;
 		std::string weight_path_file;
 		int network_index;
-		int webcam_index;
+		//int webcam_index;
 		int num_classes;
 		double threshold;
 		ros::Subscriber kinect_subscriber;
@@ -33,8 +40,7 @@ class Wrapper{
 		void init();
 		void subscribeToKinect();
 		void unsubscribeFromKinect();
-		void publishClassification(const sensor_msgs::PointCloud2::ConstPtr &msg);
-		void getCameraFrame(int webcamidx, THTensor* output, int w = -1, int h = -1);
+		void publishClassification(const sensor_msgs::ImageConstPtr &msg);
 		
 	public:
 		Wrapper(ros::NodeHandle nh);
