@@ -14,7 +14,15 @@
   <depend package="sensor_msgs"/>
   <depend package="cv_bridge"/>
   <rosdep name="opencv2"/>
+  <rosdep name="eigen"/>
   <depend package="image_transport"/>
+  <!--depend package="pcl"/-->
+  <!--rosdep name="perception_pcl"/-->
+  <!--depend package="pcl_ros"/-->
+  <rosdep name="perception_pcl_addons"/>
+  <depend package="pcl_conversions"/>
+  <build_depend>cmake_modules</build_depend>
+  <run_depend>cmake_modules</run_depend>
 
 </package>
 

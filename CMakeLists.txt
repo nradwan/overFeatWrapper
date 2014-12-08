@@ -16,8 +16,21 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
+find_package(cmake_modules REQUIRED)
+
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
+
+find_package(Eigen REQUIRED)
+include_directories(${EIGEN_INCLUDE_DIRS})
+add_definitions(${EIGEN_DEFINITIONS})
+
+#Find PCL 1.7
+find_package(PCL 1.7 REQUIRED COMPONENTS segmentation filters visualization)
+include_directories(${PCL_INCLUDE_DIRS})
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+include_directories("/usr/include/ni")
 
 #check for OpenMP
 find_package(OpenMP)
@@ -32,7 +45,7 @@ if(OPENMP_FOUND)
     endif(MSVC90)
     set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} /DELAYLOAD:${OPENMP_DLL}D.dll")
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /DELAYLOAD:${OPENMP_DLL}.dll")
-  endif(MSVC)
+  endif(MSVC90 OR MSVC10)
 else(OPENMP_FOUND)
   message (STATUS "OpenMP not found")
 endif()
@@ -58,6 +71,6 @@ rosbuild_gensrv()
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 rosbuild_add_executable(Wrapper src/wrapper.cpp)
-target_link_libraries(Wrapper ${OpenCV_LIBRARIES}
+target_link_libraries(Wrapper ${OpenCV_LIBRARIES} ${PCL_LIBRARIES}
 						/home/noha/Documents/Hiwi/overfeat/src/liboverfeat.a
 						/home/noha/Documents/Hiwi/overfeat/src/libTH.a)
