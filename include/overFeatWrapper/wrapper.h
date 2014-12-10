@@ -17,10 +17,10 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <ros/ros.h>
 #include <Eigen/Core>
-//#include <pcl/ros/conversions.h>
-//#include <pcl/search/kdtree.h>
+#include <pcl/ros/conversions.h>
+#include <pcl/search/kdtree.h>
 //#include <pcl/search/search.h>
-/*
+
 #include <pcl/search/pcl_search.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -46,20 +46,25 @@
 #include <pcl/sample_consensus/model_types.h>
 #include <pcl/sample_consensus/method_types.h>
 #include <pcl/segmentation/sac_segmentation.h>
-*/
+
 //#include <pcl_conversions/pcl_conversions.h>
+#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/MarkerArray.h>
 
 namespace enc = sensor_msgs::image_encodings;
 using namespace cv;
 
 class Wrapper{
 	private:
-		//typedef pcl::PointXYZRGB PCLPoint;
-		//typedef pcl::PointCloud<PCLPoint> PCLPointCloud;
+		typedef pcl::PointXYZRGB PCLPoint;
+		typedef pcl::PointCloud<PCLPoint> PCLPointCloud;
 		ros::NodeHandle node_handle;
 		std::string kinect_topic;
 		std::string classification_topic;
 		std::string pub_topic;
+		std::string table_pub_topic;
+		std::string clustered_objs_pub_topic;
+		std::string frame_id;
 		std::string weight_path_file;
 		int network_index;
 		//int webcam_index;
@@ -68,6 +73,8 @@ class Wrapper{
 		ros::Subscriber kinect_subscriber;
 		ros::Publisher classification_pub;
 		ros::ServiceServer classify_server;
+		ros::Publisher table_pub;
+		ros::Publisher clustered_objs_pub;
 		VideoCapture* cam;
 		Mat_<Vec3b> getCameraFrame_tmp;
 		double clustering_tolerance_;
@@ -77,11 +84,11 @@ class Wrapper{
 		void init();
 		void subscribeToKinect();
 		void unsubscribeFromKinect();
-		//void publishClassification(const sensor_msgs::PointCloud2::ConstPtr &msg);
-		//void filterPointcloud(PCLPointCloud::Ptr& original_pc, PCLPointCloud::Ptr& objects_pointcloud, PCLPointCloud::Ptr& table_pointcloud);
-		//void clusterPointcloud(PCLPointCloud::Ptr& cloud, vector<pcl::PointIndices>& cluster_indices);
-		//void computeCentroid(const PCLPointCloud& cloud, Eigen::Vector3f& centroid);
-		std::vector<std::pair<std::string, float> > overFeatCallBack(sensor_msgs::Image::ConstPtr& img_msg, double tp_left_x, 
+		void publishClassification(const sensor_msgs::PointCloud2::ConstPtr &msg);
+		void filterPointcloud(const sensor_msgs::PointCloud2::ConstPtr& original_pc, PCLPointCloud::Ptr& objects_pointcloud, PCLPointCloud::Ptr& table_pointcloud);
+		void clusterPointcloud(PCLPointCloud::Ptr& cloud, vector<pcl::PointIndices>& cluster_indices);
+		void computeCentroid(const PCLPointCloud& cloud, Eigen::Vector3f& centroid);
+		std::vector<std::pair<std::string, float> > overFeatCallBack(sensor_msgs::Image::Ptr& img_msg, double tp_left_x, 
 			double tp_left_y, double width);
 		
 	public:

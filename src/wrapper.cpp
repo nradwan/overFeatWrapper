@@ -12,9 +12,12 @@ Wrapper::~Wrapper(){
 
 void Wrapper::init(){
 	
-	kinect_topic = "/camera/rgb/image_rect_color";
+	kinect_topic = "/camera/depth_registered/points";
 	classification_topic = "OverFeat";
 	pub_topic = "OverFeatClassif";
+	table_pub_topic = "tableTop";
+	clustered_objs_pub_topic = "clusteredObjs";
+	frame_id = "/camera_rgb_frame";
 	//initialize overfeat parameters
 	weight_path_file = "/home/noha/Documents/Hiwi/overfeat/data/default/net_weight_0";
 	network_index = 0;
@@ -28,6 +31,12 @@ void Wrapper::init(){
 	//announce classification service
 	classify_server = node_handle.advertiseService(classification_topic, &Wrapper::handleClassificationServiceCall, this);
 	ROS_INFO("Announced service: %s", classification_topic.c_str());
+	classification_pub = node_handle.advertise<overFeatWrapper::detectedObjArray>(pub_topic, 1);
+	ROS_INFO("Publishing classification topic: %s", pub_topic.c_str());
+	table_pub = node_handle.advertise<sensor_msgs::PointCloud2>(table_pub_topic, 1);
+	ROS_INFO("Publishing table pointcloud topic: %s", table_pub_topic.c_str());
+	clustered_objs_pub = node_handle.advertise<visualization_msgs::MarkerArray>(clustered_objs_pub_topic, 1);
+	ROS_INFO("Publishing clustered objects topic: %s", clustered_objs_pub_topic.c_str());
 	
 	
 }
@@ -50,7 +59,7 @@ bool Wrapper::handleClassificationServiceCall(overFeatWrapper::overFeat::Request
 }
 
 void Wrapper::subscribeToKinect(){
-	//kinect_subscriber = node_handle.subscribe(kinect_topic, 1, &Wrapper::publishClassification, this);
+	kinect_subscriber = node_handle.subscribe(kinect_topic, 1, &Wrapper::publishClassification, this);
 	ROS_INFO("Subscribed to: %s", kinect_topic.c_str());
 }
 
@@ -59,33 +68,51 @@ void Wrapper::unsubscribeFromKinect(){
 	ROS_WARN("UNsubscribed from: %s", kinect_topic.c_str());
 }
 
-/*void Wrapper::filterPointcloud(PCLPointCloud::Ptr& original_pc, PCLPointCloud::Ptr& objects_pointcloud, PCLPointCloud::Ptr& table_pointcloud){
+void Wrapper::filterPointcloud(const sensor_msgs::PointCloud2::ConstPtr& original_pc, PCLPointCloud::Ptr& objects_pointcloud, PCLPointCloud::Ptr& table_pointcloud){
 	double plane_thresh = 0.03;
+	PCLPointCloud::Ptr pcl_original(new PCLPointCloud);
+	pcl::fromROSMsg(*original_pc, *pcl_original);
 	pcl::ModelCoefficients coefficients;
 	pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
 	// Create the segmentation object
-	pcl::SACSegmentation<pcl::PointXYZRGB> seg;
+	pcl::SACSegmentation<PCLPoint> seg;
 	seg.setOptimizeCoefficients(true);
 	seg.setModelType(pcl::SACMODEL_PLANE);
 	seg.setMethodType(pcl::SAC_RANSAC);
 	seg.setDistanceThreshold(plane_thresh);
-	seg.setInputCloud(original_pc);
+	seg.setInputCloud(pcl_original);
 	seg.segment(*inliers, coefficients);
 	
-	pcl::ExtractIndices<pcl::PointXYZRGB> extract;
+	pcl::ExtractIndices<PCLPoint> extract;
 	// Extract table
-	extract.setInputCloud(original_pc);
+	extract.setInputCloud(pcl_original);
 	extract.setIndices(inliers);
 	extract.setNegative(false);
 	table_pointcloud->clear();
 	extract.filter(*table_pointcloud);
 
 	// Extract objects
-	extract.setInputCloud(original_pc);
+	extract.setInputCloud(pcl_original);
 	extract.setIndices(inliers);
 	extract.setNegative(true);
 	objects_pointcloud->clear();
 	extract.filter(*objects_pointcloud);
+	
+	
+	if(objects_pointcloud->points.empty()){
+		std::cout << "no objs. leaving" << std::endl;
+		return;
+	}
+	
+	std::vector<int> nan_indices;
+	pcl::removeNaNFromPointCloud(*objects_pointcloud,*objects_pointcloud,nan_indices); 
+	
+	std::cout << "original cloud has size " << pcl_original->points.size() << std::endl;
+	std::cout << "passing on objs cloud of size " << objects_pointcloud->points.size() << std::endl;
+	
+	objects_pointcloud->height = 1;
+	objects_pointcloud->width = objects_pointcloud->points.size();
+	
 }
 
 void Wrapper::clusterPointcloud(PCLPointCloud::Ptr& cloud, std::vector<pcl::PointIndices>& cluster_indices){
@@ -100,17 +127,17 @@ void Wrapper::clusterPointcloud(PCLPointCloud::Ptr& cloud, std::vector<pcl::Poin
 	ec.setInputCloud(cloud);
 	ec.extract(cluster_indices);
 }
-*/
+
 // Computes the object centroid based on the pointcloud
-/*void Wrapper::computeCentroid(const PCLPointCloud& cloud, Eigen::Vector3f& centroid){
+void Wrapper::computeCentroid(const PCLPointCloud& cloud, Eigen::Vector3f& centroid){
 	Eigen::Vector4f centr;
 	pcl::compute3DCentroid(cloud, centr);
 	centroid[0] = centr[0];
 	centroid[1] = centr[1];
 	centroid[2] = centr[2];
-}*/
+}
 
-std::vector<std::pair<std::string, float> > Wrapper::overFeatCallBack(sensor_msgs::Image::ConstPtr& img_msg, double tp_left_x, 
+std::vector<std::pair<std::string, float> > Wrapper::overFeatCallBack(sensor_msgs::Image::Ptr& img_msg, double tp_left_x, 
 			double tp_left_y, double width){
 	
 	std::vector<std::pair<std::string, float> > empty_res;
@@ -174,20 +201,45 @@ std::vector<std::pair<std::string, float> > Wrapper::overFeatCallBack(sensor_msg
   }		
 }
 
-//void Wrapper::publishClassification(const sensor_msgs::PointCloud2::ConstPtr &msg){
+void Wrapper::publishClassification(const sensor_msgs::PointCloud2::ConstPtr &msg){
 	// Extract table plane. Return a point cloud of the table and one of the objects.
-	/*PCLPointCloud::Ptr objs_cloud(new PCLPointCloud);
+	PCLPointCloud::Ptr objs_cloud(new PCLPointCloud);
 	PCLPointCloud::Ptr table_cloud(new PCLPointCloud);
-	PCLPointCloud::Ptr n_original_pc(new pcl::PCLPointCloud2());
-	pcl::fromROSMsg(*msg, *n_original_pc);
-	filterPointcloud(n_original_pc, objs_cloud, table_cloud);
+	filterPointcloud(msg, objs_cloud, table_cloud);
+	if(objs_cloud->points.empty()){
+		std::cout << "no objs. leaving" << std::endl;
+		return;
+	}
+		
+	//publish the table point cloud
+	sensor_msgs::PointCloud2::Ptr table_msg(new sensor_msgs::PointCloud2);
+//	pcl::toROSMsg(*table_cloud, *table_msg);
+	pcl::toROSMsg(*objs_cloud, *table_msg);
+	table_pub.publish(*table_msg);
 	
+	pcl::search::KdTree<PCLPoint>::Ptr kdtree_cl(new pcl::search::KdTree<PCLPoint>());
+	std::vector<pcl::PointIndices> cluster_indices;
+	kdtree_cl->setInputCloud(objs_cloud);
+	pcl::EuclideanClusterExtraction<PCLPoint> ec;
+	ec.setClusterTolerance(clustering_tolerance_);
+	ec.setMinClusterSize(cluster_min_size_);
+	ec.setMaxClusterSize(cluster_max_size_);
+	ec.setSearchMethod(kdtree_cl);
+	ec.setInputCloud(objs_cloud);
+	ec.extract(cluster_indices);
+	std::cout << "found " << cluster_indices.size() << " clusters" << std::endl;
+
+/*
+	visualization_msgs::MarkerArray detected_centroids;
 	//Cluster the objects
 	std::vector<pcl::PointIndices> cluster_indices;
 	std::vector<pcl::PointIndices>::const_iterator it;
 	clusterPointcloud(objs_cloud, cluster_indices);
 	std::vector<PCLPointCloud::Ptr> new_clusters; // collect new clusters
-	/*std::vector<Eigen::Vector3f> new_cluster_centroids; // collect new cluster centroids
+	std::vector<Eigen::Vector3f> new_cluster_centroids; // collect new cluster centroids
+	std::cout << "found " << cluster_indices.size() << " clusters" << std::endl;
+	int id = 0;
+	
 	for (it = cluster_indices.begin(); it != cluster_indices.end(); ++it) {
 		PCLPointCloud::Ptr single_cluster(new PCLPointCloud);
 		single_cluster->width = it->indices.size();
@@ -203,16 +255,39 @@ std::vector<std::pair<std::string, float> > Wrapper::overFeatCallBack(sensor_msg
  		Eigen::Vector3f new_centr;
 		computeCentroid(*single_cluster, new_centr);
 		new_cluster_centroids.push_back(new_centr);
+		//add object centroid to marker array
+		visualization_msgs::Marker curr_obj;
+		curr_obj.header.frame_id = frame_id;
+		curr_obj.header.stamp = ros::Time();
+		curr_obj.id = id;
+		curr_obj.type = visualization_msgs::Marker::SPHERE;
+		curr_obj.action = visualization_msgs::Marker::ADD;
+		curr_obj.pose.position.x = new_centr(0);
+		curr_obj.pose.position.y = new_centr(1);
+		curr_obj.pose.position.z = new_centr(2);
+		curr_obj.scale.x = 0.1;
+		curr_obj.scale.y = 0.1;
+		curr_obj.scale.z = 0.1;
+		curr_obj.color.a = 1.0;
+		curr_obj.color.r = 1.0;
+		curr_obj.color.g = 0.0;
+		curr_obj.color.b = 0.0;
+		detected_centroids.markers.push_back(curr_obj);
+		
+		id++;
 	}
+	
+	//publish the detected clusters
+	clustered_objs_pub.publish(detected_centroids);
 	
 	//Get the classification of each clustered object
 	overFeatWrapper::detectedObjArray top_classes_msg;
 	std::vector<PCLPointCloud::Ptr>::iterator clust_it;
-	/*std::vector<Eigen::Vector3f>::iterator centr_it = new_cluster_centroids.begin();
+	std::vector<Eigen::Vector3f>::iterator centr_it = new_cluster_centroids.begin();
 	int idx = 0;
 	for(clust_it = new_clusters.begin(); clust_it != new_clusters.end(); ++clust_it){
 		//convert from pointcloud to image
-		sensor_msgs::Image::ConstPtr img_msg;
+		sensor_msgs::Image::Ptr img_msg;
 		pcl::toROSMsg(**clust_it, *img_msg);
 		//get coordinates for cropping
 		Eigen::Vector3f centr = *centr_it; 
@@ -235,8 +310,9 @@ std::vector<std::pair<std::string, float> > Wrapper::overFeatCallBack(sensor_msg
 		++idx;
 		++centr_it;
 	}
-	classification_pub.publish(top_classes_msg);*/
-//}
+	classification_pub.publish(top_classes_msg);
+*/
+}
 
 
 int main(int argc, char** argv){

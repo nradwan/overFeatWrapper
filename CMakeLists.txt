@@ -16,7 +16,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-find_package(cmake_modules REQUIRED)
+#find_package(cmake_modules REQUIRED)
 
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -26,7 +26,7 @@ include_directories(${EIGEN_INCLUDE_DIRS})
 add_definitions(${EIGEN_DEFINITIONS})
 
 #Find PCL 1.7
-find_package(PCL 1.7 REQUIRED COMPONENTS segmentation filters visualization)
+find_package(PCL 1.5 REQUIRED COMPONENTS segmentation filters visualization)
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
@@ -72,5 +72,5 @@ rosbuild_gensrv()
 #target_link_libraries(example ${PROJECT_NAME})
 rosbuild_add_executable(Wrapper src/wrapper.cpp)
 target_link_libraries(Wrapper ${OpenCV_LIBRARIES} ${PCL_LIBRARIES}
-						/home/noha/Documents/Hiwi/overfeat/src/liboverfeat.a
-						/home/noha/Documents/Hiwi/overfeat/src/libTH.a)
+						/home/radwann/overfeat/src/liboverfeat.a
+						/home/radwann/overfeat/src/libTH.a)
