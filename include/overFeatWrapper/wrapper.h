@@ -20,6 +20,8 @@
 #include <pcl/ros/conversions.h>
 #include <pcl/search/kdtree.h>
 //#include <pcl/search/search.h>
+#include <pcl_ros/point_cloud.h>
+#include <pcl/point_types.h>
 
 #include <pcl/search/pcl_search.h>
 #include <pcl/point_cloud.h>
@@ -80,6 +82,9 @@ class Wrapper{
 		double clustering_tolerance_;
 		int cluster_min_size_;
   		int cluster_max_size_;
+  		double maximum_obj_size;
+  		
+  		ros::Publisher temp_pub;
 		
 		void init();
 		void subscribeToKinect();
